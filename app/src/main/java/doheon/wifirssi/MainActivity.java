@@ -36,10 +36,24 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+
+    @Override
+    protected  void onResume(){
+        super.onResume();
+
+        IntentFilter rssiFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        this.registerReceiver(rssiReceiver, rssiFilter);
+
+        WifiManager wifimanger = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifimanger.startScan();
+    }
+
+
     private BroadcastReceiver rssiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             WifiManager wifimanger = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            wifimanger.startScan();
             WifiInfo info = wifimanger.getConnectionInfo();
 
             int _rssi = info.getRssi();
